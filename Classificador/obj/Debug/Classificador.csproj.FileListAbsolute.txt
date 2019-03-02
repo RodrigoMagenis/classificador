@@ -1,0 +1,7 @@
+D:\Github\Classificador\Classificador\Classificador\bin\Debug\Classificador.exe.config
+D:\Github\Classificador\Classificador\Classificador\bin\Debug\Classificador.exe
+D:\Github\Classificador\Classificador\Classificador\bin\Debug\Classificador.pdb
+D:\Github\Classificador\Classificador\Classificador\obj\Debug\Classificador.csprojAssemblyReference.cache
+D:\Github\Classificador\Classificador\Classificador\obj\Debug\Classificador.csproj.CoreCompileInputs.cache
+D:\Github\Classificador\Classificador\Classificador\obj\Debug\Classificador.exe
+D:\Github\Classificador\Classificador\Classificador\obj\Debug\Classificador.pdb
