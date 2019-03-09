@@ -16,6 +16,7 @@ namespace Classificador
 
             importAction.ShowImportationMenu();
             importAction.ReadFile();
+            importAction.classificarIris();
         }
     }
 }
