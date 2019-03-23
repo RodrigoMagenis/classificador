@@ -18,6 +18,7 @@ namespace FinanceApp.ImportAction
         List<Iris> z2 = new List<Iris>();
         List<Iris> z3 = new List<Iris>();
         List<int> elementos = new List<int>();
+        List<type> types = new List<type>();
         int tamanhoTotal;
 
         /*Coleta o diretório e o nome do arquivo*/
@@ -70,7 +71,25 @@ namespace FinanceApp.ImportAction
             for(var i = 0; i < this.fileData.Count(); i++)
             {
                 Iris iris = new Iris(converteDecimal( this.fileData[i][0]), converteDecimal(this.fileData[i][1]), converteDecimal(this.fileData[i][2]), converteDecimal(this.fileData[i][3]), this.fileData[i][4]);
+
+
+                var w = 0;
+                foreach (var j in this.types)
+                {
+                    if(j.name == iris.nome)
+                    {
+                        w++;
+                    }
+                }
+
+                if (w == 0)
+                {
+                    var h = new type(iris.nome);
+                    this.types.Add(h);
+                }
+
                 this.lista.Add(iris);
+
 
             }
 
@@ -93,20 +112,78 @@ namespace FinanceApp.ImportAction
                 this.z1.Add(this.lista[this.getRandomNumber()]);
             }
 
-            /*encontra o z (tamanho da amostra)*/
-            for(var z = 0; z < tamanhoTotal / 4; z++)
+            var maiorPercentual = 0;
+            var melhorK = 1;
+
+
+            for (var g = 1; g < this.z1.Count() / 4; g++)
             {
-                /*percorre z1*/
+
+                var k = this.getDistance(this.z1, this.z2);
+                var acerto = 0;
+
                 for (var i = 0; i < this.z1.Count(); i++)
                 {
-                    /*percorre z2*/
-                    for (var j = 0; j < this.z2.Count(); j++)
-                    {
-                        var teste = Math.Sqrt(Math.Pow((this.z1[i].var1 - this.z2[j].var1), 2) + Math.Pow((this.z1[i].var2 - this.z2[j].var2), 2) + Math.Pow((this.z1[i].var3 - this.z2[j].var3), 2) + Math.Pow((this.z1[i].var4 - this.z2[j].var4), 2));
-                    }
-                }
-            } 
+                    k[i] = k[i].OrderBy(j => j.distance).ToList(); /* Ordena por proximidade */
+                    k[i] = k[i].Take(g).ToList();
 
+                    for (var j = 0; j < k[i].Count(); j++)
+                    {
+                        foreach (var m in this.types)
+                        {
+                            if (m.name == k[i][j].name)
+                            {
+                                m.contagem++;
+                                break;
+                            }
+                        }
+                    }
+
+                    var high = this.types.OrderByDescending(m => m.contagem).Take(1);
+                    this.z1[i].nomeEncontrado = high.First().name;
+
+                    foreach (var n in this.types)
+                    {
+                        n.contagem = 0;
+                    }
+
+                    //Console.WriteLine(this.z1[i].nomeEncontrado + " | vs | " + this.z1[i].nome);
+
+                    if (this.z1[i].nomeEncontrado == this.z1[i].nome)
+                    {
+                        acerto++;
+                    }
+
+                }
+                var percentual = (acerto * 100) / this.z1.Count();
+                Console.WriteLine(percentual);
+                if( maiorPercentual < percentual)
+                {
+                    melhorK = g;
+                    maiorPercentual = percentual;
+                }
+            }
+            Console.WriteLine($"melhor porcentagem de acerto: {maiorPercentual}% com k = {melhorK}");
+            Console.ReadKey();
+        }
+
+        private List<List<Distance>> getDistance(List<Iris> zx, List<Iris> zy)
+        {
+            List<List<Distance>> k = new List<List<Distance>>();
+
+            /*percorre zx*/
+            for (var i = 0; i < zx.Count(); i++)
+            {
+                List<Distance> amostra = new List<Distance>();
+                /*percorre zy*/
+                for (var j = 0; j < zy.Count(); j++)
+                {
+                    var distance = Math.Sqrt(Math.Pow((zx[i].var1 - zy[j].var1), 2) + Math.Pow((zx[i].var2 - zy[j].var2), 2) + Math.Pow((zx[i].var3 - zy[j].var3), 2) + Math.Pow((zx[i].var4 - zy[j].var4), 2));
+                    amostra.Add(new Distance(distance, zy[j].nome));
+                }
+                k.Add(amostra);
+            }
+            return k;
         }
 
         public int getRandomNumber()

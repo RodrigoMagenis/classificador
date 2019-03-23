@@ -13,6 +13,7 @@ namespace Classificador
         public double var3;
         public double var4;
         public string nome;
+        public string nomeEncontrado;
 
         public Iris(double var1, double var2, double var3, double var4, string nome)
         {
