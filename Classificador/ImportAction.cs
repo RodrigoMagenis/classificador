@@ -102,7 +102,7 @@ namespace FinanceApp.ImportAction
                 this.z3.Add(this.lista[this.getRandomNumber()]);
             }
 
-            for (var i = 0; i < (tamanhoTotal / 2) /2; i++)
+            for (var i = 0; i < tamanhoTotal / 4; i++)
             {
                 this.z2.Add(this.lista[this.getRandomNumber()]);
             }
@@ -115,48 +115,39 @@ namespace FinanceApp.ImportAction
             var maiorPercentual = 0;
             var melhorK = 1;
 
-
+            /* Verifica várias vezes para achar o melhor knn */
             for (var g = 1; g < this.z1.Count() / 4; g++)
             {
 
-                var k = this.getDistance(this.z1, this.z2);
+                var k = this.getDistance(this.z2, this.z1); /*pega a distância entre z1 e z2*/
                 var acerto = 0;
 
-                for (var i = 0; i < this.z1.Count(); i++)
+                for (var i = 0; i < k.Count(); i++)
                 {
-                    k[i] = k[i].OrderBy(j => j.distance).ToList(); /* Ordena por proximidade */
-                    k[i] = k[i].Take(g).ToList();
 
-                    for (var j = 0; j < k[i].Count(); j++)
-                    {
-                        foreach (var m in this.types)
-                        {
-                            if (m.name == k[i][j].name)
-                            {
-                                m.contagem++;
-                                break;
-                            }
-                        }
-                    }
+                    this.getRecurrence(ref k, i, g);
 
+                    /* Pega o nome mais recorrente e atribui ao nome encontrado */
                     var high = this.types.OrderByDescending(m => m.contagem).Take(1);
                     this.z1[i].nomeEncontrado = high.First().name;
 
-                    foreach (var n in this.types)
-                    {
-                        n.contagem = 0;
-                    }
+                    /* Reset na contagem de todos os tipos */
+                    this.resetRecurrence();
 
                     //Console.WriteLine(this.z1[i].nomeEncontrado + " | vs | " + this.z1[i].nome);
 
+                    /* Compara nome encontrado com nome real e soma em acerto caso seja o mesmo valor */
                     if (this.z1[i].nomeEncontrado == this.z1[i].nome)
                     {
                         acerto++;
                     }
 
                 }
+
+                /* Calcula o percentual de acerto */
                 var percentual = (acerto * 100) / this.z1.Count();
-                Console.WriteLine(percentual);
+
+                /* Atualiza o maior percentual de acertos usado para definir o knn */
                 if( maiorPercentual < percentual)
                 {
                     melhorK = g;
@@ -165,6 +156,67 @@ namespace FinanceApp.ImportAction
             }
             Console.WriteLine($"melhor porcentagem de acerto: {maiorPercentual}% com k = {melhorK}");
             Console.ReadKey();
+            Console.Clear();
+
+            /*Compara z1 com z3*/
+
+            var knn = this.getDistance(this.z3, this.z1); /*pega a distância entre z1 e z2*/
+            var acerto1 = 0;
+
+            for (var i = 0; i < knn.Count(); i++)
+            {
+
+                this.getRecurrence(ref knn, i, melhorK);
+
+                /* Pega o nome mais recorrente e atribui ao nome encontrado */
+                var high = this.types.OrderByDescending(m => m.contagem).Take(1);
+                this.z3[i].nomeEncontrado = high.First().name;
+
+                /* Reset na contagem de todos os tipos */
+                this.resetRecurrence();
+
+                Console.WriteLine(this.z3[i].nomeEncontrado + " | vs | " + this.z3[i].nome);
+
+                /* Compara nome encontrado com nome real e soma em acerto caso seja o mesmo valor */
+                if (this.z3[i].nomeEncontrado == this.z3[i].nome)
+                {
+                    acerto1++;
+                }
+
+            }
+
+            /* Calcula o percentual de acerto */
+            var percentual1 = (acerto1 * 100) / this.z3.Count();
+            Console.WriteLine($"percentual= {percentual1}");
+            Console.ReadKey();
+        }
+
+        private void resetRecurrence()
+        {
+            foreach (var n in this.types)
+            {
+                n.contagem = 0;
+            }
+        }
+
+        private void getRecurrence(ref List<List<Distance>> k, int i, int g)
+        {
+            k[i] = k[i].OrderBy(j => j.distance).ToList(); /* Ordena por proximidade */
+            k[i] = k[i].Take(g).ToList(); /*Pega a quantida do knn*/
+
+
+            /* Realiza a contagem de recorrencia de cada tipo */
+            for (var j = 0; j < k[i].Count(); j++)
+            {
+                foreach (var m in this.types)
+                {
+                    if (m.name == k[i][j].name)
+                    {
+                        m.contagem++;
+                        break;
+                    }
+                }
+            }
         }
 
         private List<List<Distance>> getDistance(List<Iris> zx, List<Iris> zy)
