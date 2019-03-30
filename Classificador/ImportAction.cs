@@ -17,7 +17,6 @@ namespace FinanceApp.ImportAction
         List<Iris> z1 = new List<Iris>();
         List<Iris> z2 = new List<Iris>();
         List<Iris> z3 = new List<Iris>();
-        List<int> elementos = new List<int>();
         List<type> types = new List<type>();
         int tamanhoTotal;
 
@@ -43,7 +42,6 @@ namespace FinanceApp.ImportAction
             using (StreamReader file = new StreamReader(directory + "\\" + fileName + ".txt"))
             {
                 var data = new List<String[]>();
-                var countRow = 1;
                 Console.WriteLine("Lendo arquivo");
                 while (!file.EndOfStream)
                 {
@@ -95,28 +93,68 @@ namespace FinanceApp.ImportAction
 
             tamanhoTotal = this.lista.Count();
 
-            
-            
-            for (var i = 0; i < tamanhoTotal / 2; i++)
+            /* Pega o de presença de percentual de cada tipo */
+            for (var i = 0; i < this.types.Count(); i ++)
             {
-                this.z3.Add(this.lista[this.getRandomNumber()]);
+                this.types[i].contagem = this.lista.Count(j => j.nome == this.types[i].name);
+                this.types[i].percentualPresenca = this.types[i].contagem * 100 / tamanhoTotal;
+                Console.WriteLine($"percentual {this.types[i].name} = {this.types[i].percentualPresenca}");
             }
 
-            for (var i = 0; i < tamanhoTotal / 4; i++)
+
+
+            int z3size = tamanhoTotal / 2;
+            for (var i = 0; i < z3size; i++)
             {
-                this.z2.Add(this.lista[this.getRandomNumber()]);
+                var random = this.getRandomNumber();
+                var element = this.lista[random];
+
+                var quant = this.z3.Where(j => j.nome == element.nome).Count();
+                var percent = quant * 100 / z3size;
+                Console.WriteLine($"percentual {element.nome} = p: {percent}");
+                var typepercent = this.types.Where(j => j.name == element.nome).First().percentualPresenca;
+
+                if ( percent < typepercent )
+                {
+                    this.z3.Add(element);
+                    this.lista.RemoveAt(random);
+                } else
+                {
+                    i -= 1;
+                }
+                
+                
             }
 
-            while(this.elementos.Count() < this.tamanhoTotal)
+            int z2size = tamanhoTotal / 4;
+            for (var i = 0; i < z2size; i++)
             {
-                this.z1.Add(this.lista[this.getRandomNumber()]);
+                
+                var random = this.getRandomNumber();
+                var element = this.lista[random];
+                if ( this.z2.Where(j => j.nome == element.nome).Count() * 100 / z2size < this.types.Where(j => j.name == element.nome).First().percentualPresenca )
+                {
+                    Console.WriteLine(element.nome);
+                    this.z2.Add(element);
+                    this.lista.RemoveAt(random);
+                } else
+                {
+                    i -= 1;
+                }
+            }
+
+            while( this.lista.Count() > 0 )
+            {
+                var random = this.getRandomNumber();
+                this.z1.Add(this.lista[random]);
+                this.lista.RemoveAt(random);
             }
 
             var maiorPercentual = 0;
             var melhorK = 1;
 
             /* Verifica várias vezes para achar o melhor knn */
-            for (var g = 1; g < this.z1.Count() / 4; g++)
+                for (var g = 1; g < this.z1.Count() / 4; g++)
             {
 
                 var k = this.getDistance(this.z2, this.z1); /*pega a distância entre z1 e z2*/
@@ -157,6 +195,58 @@ namespace FinanceApp.ImportAction
             Console.WriteLine($"melhor porcentagem de acerto: {maiorPercentual}% com k = {melhorK}");
             Console.ReadKey();
             Console.Clear();
+
+            //int tentativa = 0;
+            //while (maiorPercentual < 90 && tentativa < 50)
+            //{
+            //    for(var i =0; i < this.z1.Count(); i++)
+            //    {
+            //        if (this.z1[i].nome != this.z1[i].nomeEncontrado)
+            //        {
+            //            int b = this.z2.Find(j => j.nome.Equals(this.z1[i].nome));
+            //            z1.Add();
+            //            this.z1.RemoveAt(i);
+                        
+            //        }
+            //    }
+                
+
+            //    var k2 = this.getDistance(this.z2, this.z1); /*pega a distância entre z1 e z2*/
+            //    var acerto = 0;
+
+            //    for (var i = 0; i < k2.Count(); i++)
+            //    {
+
+            //        this.getRecurrence(ref k2, i, melhorK);
+
+            //        /* Pega o nome mais recorrente e atribui ao nome encontrado */
+            //        var high = this.types.OrderByDescending(m => m.contagem).Take(1);
+            //        this.z1[i].nomeEncontrado = high.First().name;
+
+            //        /* Reset na contagem de todos os tipos */
+            //        this.resetRecurrence();
+
+            //        //Console.WriteLine(this.z1[i].nomeEncontrado + " | vs | " + this.z1[i].nome);
+
+            //        /* Compara nome encontrado com nome real e soma em acerto caso seja o mesmo valor */
+            //        if (this.z1[i].nomeEncontrado == this.z1[i].nome)
+            //        {
+            //            acerto++;
+            //        }
+            //    }
+            //    /* Calcula o percentual de acerto */
+            //    var percentual = (acerto * 100) / this.z1.Count();
+
+            //    /* Atualiza o maior percentual de acertos usado para definir o knn */
+            //    if (maiorPercentual < percentual)
+            //    {
+            //        maiorPercentual = percentual;
+            //        Console.WriteLine($"maior: {maiorPercentual}, percentual: {percentual}");
+            //    }
+
+            //    tentativa++;
+            //    Console.WriteLine($"tentativa:{tentativa}, percentual: {percentual}");
+            //}
 
             /*Compara z1 com z3*/
 
@@ -241,13 +331,7 @@ namespace FinanceApp.ImportAction
         public int getRandomNumber()
         {
             Random rnd = new Random();
-            int elemento;
-            do
-            {
-                elemento = rnd.Next(0, this.tamanhoTotal);
-            } while (elementos.Contains(elemento));
-            elementos.Add(elemento);
-            return elemento;
+            return rnd.Next(0, this.lista.Count());
         }
 
         public double converteDecimal( string value )
