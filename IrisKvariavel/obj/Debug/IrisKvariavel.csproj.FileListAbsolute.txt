@@ -1,0 +1,7 @@
+D:\Github\Classificador\IrisKvariavel\bin\Debug\IrisKvariavel.exe.config
+D:\Github\Classificador\IrisKvariavel\bin\Debug\IrisKvariavel.exe
+D:\Github\Classificador\IrisKvariavel\bin\Debug\IrisKvariavel.pdb
+D:\Github\Classificador\IrisKvariavel\obj\Debug\IrisKvariavel.csprojAssemblyReference.cache
+D:\Github\Classificador\IrisKvariavel\obj\Debug\IrisKvariavel.csproj.CoreCompileInputs.cache
+D:\Github\Classificador\IrisKvariavel\obj\Debug\IrisKvariavel.exe
+D:\Github\Classificador\IrisKvariavel\obj\Debug\IrisKvariavel.pdb

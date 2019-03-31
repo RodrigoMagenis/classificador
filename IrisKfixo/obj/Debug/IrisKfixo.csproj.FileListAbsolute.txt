@@ -1,0 +1,6 @@
+D:\Github\Classificador\IrisKfixo\bin\Debug\IrisKfixo.exe.config
+D:\Github\Classificador\IrisKfixo\bin\Debug\IrisKfixo.exe
+D:\Github\Classificador\IrisKfixo\bin\Debug\IrisKfixo.pdb
+D:\Github\Classificador\IrisKfixo\obj\Debug\IrisKfixo.csproj.CoreCompileInputs.cache
+D:\Github\Classificador\IrisKfixo\obj\Debug\IrisKfixo.exe
+D:\Github\Classificador\IrisKfixo\obj\Debug\IrisKfixo.pdb
