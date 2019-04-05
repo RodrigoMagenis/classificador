@@ -5,34 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IrisKvariavel
+namespace habermanvariavel
 {
     class Program
     {
         /* globals */
         public static List<String[]> fileData;             /* Matriz que armazena os dados contidos no arquivo csv */
         public static List<type> types = new List<type>(); /* Lista que guarda os tipos */
-        public static List<Iris> lista = new List<Iris>();
+        public static List<Base> lista = new List<Base>();
         public static int tamanhoTotal;
-        public static List<Iris> z1 = new List<Iris>();
-        public static List<Iris> z2 = new List<Iris>();
-        public static List<Iris> z3 = new List<Iris>();
+        public static List<Base> z1 = new List<Base>();
+        public static List<Base> z2 = new List<Base>();
+        public static List<Base> z3 = new List<Base>();
 
 
         static void Main(string[] args)
         {
-            
+
 
             fileData = ReadCSVfile();
 
             for (var i = 0; i < fileData.Count(); i++)
             {
-                Iris iris = new Iris(converteDecimal(fileData[i][0]), converteDecimal(fileData[i][1]), converteDecimal(fileData[i][2]), converteDecimal(fileData[i][3]), fileData[i][4]);
+                Base db = new Base(converteDecimal(fileData[i][0]), converteDecimal(fileData[i][1]), converteDecimal(fileData[i][2]), fileData[i][3]);
 
                 var w = 0;
                 foreach (var j in types)
                 {
-                    if (j.name == iris.nome)
+                    if (j.name == db.nome)
                     {
                         w++;
                     }
@@ -40,11 +40,11 @@ namespace IrisKvariavel
 
                 if (w == 0)
                 {
-                    var h = new type(iris.nome);
+                    var h = new type(db.nome);
                     types.Add(h);
                 }
 
-                lista.Add(iris);
+                lista.Add(db);
             }
 
             tamanhoTotal = lista.Count();
@@ -62,18 +62,19 @@ namespace IrisKvariavel
                 var random = getRandomNumber();
                 var element = lista[random];
 
-                var quant = z3.Where(j => j.nome == element.nome).Count();
+                var quant = z3.Where(j => j.nome == element.nome && element.testez3 != true).Count();
                 var percent = quant * 100 / z3size;
                 var typepercent = types.Where(j => j.name == element.nome).First().percentualPresenca;
-
                 if (percent < typepercent)
                 {
                     z3.Add(element);
                     lista.RemoveAt(random);
+                    Console.WriteLine(lista.Count());
                 }
                 else
                 {
                     i -= 1;
+                    lista[random].testez3 = true;
                 }
             }
 
@@ -83,7 +84,7 @@ namespace IrisKvariavel
 
                 var random = getRandomNumber();
                 var element = lista[random];
-                if (z2.Where(j => j.nome == element.nome).Count() * 100 / z2size < types.Where(j => j.name == element.nome).First().percentualPresenca)
+                if (z2.Where(j => j.nome == element.nome && element.testez2 != true).Count() * 100 / z2size < types.Where(j => j.name == element.nome).First().percentualPresenca)
                 {
                     z2.Add(element);
                     lista.RemoveAt(random);
@@ -91,6 +92,7 @@ namespace IrisKvariavel
                 else
                 {
                     i -= 1;
+                    lista[random].testez2 = true;
                 }
             }
 
@@ -143,7 +145,7 @@ namespace IrisKvariavel
                 }
             }
             Console.WriteLine($"melhor porcentagem de acerto: {maiorPercentual}% com k = {melhorK}");
-            Console.ReadKey();
+            //Console.ReadKey();
             Console.Clear();
 
 
@@ -154,7 +156,8 @@ namespace IrisKvariavel
             var d2 = getDistance(z1, z2); /*pega a distância entre z1 e z2*/
             var acerto2 = 0;
             int tentativa = 0;
-            while (maiorPercentual < 99 && tentativa < 50) {
+            while (maiorPercentual < 99 && tentativa < 50)
+            {
 
                 for (var i = 0; i < d2.Count(); i++)
                 {
@@ -183,7 +186,8 @@ namespace IrisKvariavel
                             z1.Add(z2troca);
                             z2.Remove(z2troca);
                         }
-                    } else
+                    }
+                    else
                     {
                         acerto2++;
                     }
@@ -195,7 +199,7 @@ namespace IrisKvariavel
                     z.trocado = false;
                 }
                 var p = (acerto2 * 100) / z1.Count();
-                if( p > maiorPercentual)
+                if (p > maiorPercentual)
                 {
                     maiorPercentual = p;
                 }
@@ -261,7 +265,7 @@ namespace IrisKvariavel
 
         static List<String[]> ReadCSVfile()
         {
-            using (StreamReader file = new StreamReader(@"D:\Github\Classificador\Classificador\database\iris.txt"))
+            using (StreamReader file = new StreamReader(@"D:\Github\Classificador\database\basehaberman.txt"))
             {
                 var data = new List<String[]>();
                 while (!file.EndOfStream)
@@ -274,7 +278,7 @@ namespace IrisKvariavel
             }
         }
 
-        static List<List<Distance>> getDistance(List<Iris> zx, List<Iris> zy)
+        static List<List<Distance>> getDistance(List<Base> zx, List<Base> zy)
         {
             List<List<Distance>> k = new List<List<Distance>>();
 
@@ -285,7 +289,7 @@ namespace IrisKvariavel
                 /*percorre zy*/
                 for (var j = 0; j < zy.Count(); j++)
                 {
-                    var distance = Math.Sqrt(Math.Pow((zx[i].var1 - zy[j].var1), 2) + Math.Pow((zx[i].var2 - zy[j].var2), 2) + Math.Pow((zx[i].var3 - zy[j].var3), 2) + Math.Pow((zx[i].var4 - zy[j].var4), 2));
+                    var distance = Math.Sqrt(Math.Pow((zx[i].var1 - zy[j].var1), 2) + Math.Pow((zx[i].var2 - zy[j].var2), 2) + Math.Pow((zx[i].var3 - zy[j].var3), 2));
                     amostra.Add(new Distance(distance, zy[j].nome));
                 }
                 k.Add(amostra);
@@ -315,23 +319,23 @@ namespace IrisKvariavel
 
     }
 
-    public class Iris
+    public class Base
     {
         public double var1;
         public double var2;
         public double var3;
-        public double var4;
         public string nome;
         public string nomeEncontrado;
         public bool trocado = false;
+        public bool testez3 = false;
+        public bool testez2 = false;
 
-        public Iris(double var1, double var2, double var3, double var4, string nome)
+        public Base(double var1, double var2, double var3, string nome)
         {
+            this.nome = nome;
             this.var1 = var1;
             this.var2 = var2;
             this.var3 = var3;
-            this.var4 = var4;
-            this.nome = nome;
         }
     }
 

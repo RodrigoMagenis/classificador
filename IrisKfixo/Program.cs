@@ -143,7 +143,7 @@ namespace IrisKfixo
              * Realiza trocas trocas
              */
 
-            var d2 = getDistance(z1, z2); /*pega a distância entre z3 e z1*/
+            var d2 = getDistance(z1, z2); /*pega a distância entre z1 e z2*/
             var acerto2 = 0;
             int tentativa = 0;
             while (maiorPercentual < 99 && tentativa < 50)
@@ -195,6 +195,7 @@ namespace IrisKfixo
                 }
                 acerto2 = 0;
                 tentativa++;
+                d2 = getDistance(z1, z2); /*pega a distância entre z1 e z2*/
             }
 
 

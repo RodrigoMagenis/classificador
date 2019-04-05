@@ -1,0 +1,6 @@
+D:\Github\Classificador\habermanvariavel\bin\Debug\habermanvariavel.exe.config
+D:\Github\Classificador\habermanvariavel\bin\Debug\habermanvariavel.exe
+D:\Github\Classificador\habermanvariavel\bin\Debug\habermanvariavel.pdb
+D:\Github\Classificador\habermanvariavel\obj\Debug\habermanvariavel.csproj.CoreCompileInputs.cache
+D:\Github\Classificador\habermanvariavel\obj\Debug\habermanvariavel.exe
+D:\Github\Classificador\habermanvariavel\obj\Debug\habermanvariavel.pdb

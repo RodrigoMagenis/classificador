@@ -1,0 +1,6 @@
+D:\Github\Classificador\habermanfixo\bin\Debug\habermanfixo.exe.config
+D:\Github\Classificador\habermanfixo\bin\Debug\habermanfixo.exe
+D:\Github\Classificador\habermanfixo\bin\Debug\habermanfixo.pdb
+D:\Github\Classificador\habermanfixo\obj\Debug\habermanfixo.csproj.CoreCompileInputs.cache
+D:\Github\Classificador\habermanfixo\obj\Debug\habermanfixo.exe
+D:\Github\Classificador\habermanfixo\obj\Debug\habermanfixo.pdb
